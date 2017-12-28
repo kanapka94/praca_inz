@@ -1,0 +1,25 @@
+{
+    "name": "adakon_secure_form",
+    "version": "1.0.0",
+    "description": "Sending encrypted files to server",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/kanapka94/praca_inz.git"
+    },
+    "keywords": [
+        "encryption"
+    ],
+    "author": "Adam Konopka <rumpelteam@gmail.com>",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/kanapka94/praca_inz/issues"
+    },
+    "homepage": "https://github.com/kanapka94/praca_inz#readme",
+    "dependencies": {
+        "gulp": "3.9.1"
+    }
+}
