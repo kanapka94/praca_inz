@@ -1,2 +1,5 @@
-# praca_inz
+# 1
+
 Praca inżynierska
+
+Autor: Adam Konopka
