@@ -1,5 +1,23 @@
-var gulp = require('gulp');
+var gulp = require('gulp'),
+    browserSync = require('browser-sync');
 
-gulp.task('css', function() {
-    console.log('Zadanie CSS');
+gulp.task('serve', function() {
+
+    browserSync({
+        server: 'app'
+    });
+
+    gulp.watch(
+        [
+            'app/*.html',
+            'app/scss/*.scss',
+            'app/js/*.js'
+        ],
+        ['reload']
+    );
+    
+});
+
+gulp.task('reload', function() {
+    browserSync.reload();
 });

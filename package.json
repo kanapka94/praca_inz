@@ -21,5 +21,8 @@
     "homepage": "https://github.com/kanapka94/praca_inz#readme",
     "dependencies": {
         "gulp": "3.9.1"
+    },
+    "devDependencies": {
+        "browser-sync": "2.22.0"
     }
 }
