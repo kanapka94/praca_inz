@@ -3,7 +3,8 @@ var gulp = require('gulp'),
     sass = require('gulp-sass'),
     sourcemaps = require('gulp-sourcemaps'),
     autoprefixer = require('gulp-autoprefixer'),
-    cleanCSS = require('gulp-clean-css');
+    cleanCSS = require('gulp-clean-css'),
+    uglify = require('gulp-uglify');
 
 gulp.task('default', ['serve']);
 
@@ -15,6 +16,7 @@ gulp.task('serve', ['sass'], function() {
 
     gulp.watch('app/*.html', ['reload']);
     gulp.watch('app/scss/**/*.scss', ['sass']);
+    gulp.watch('app/js/**/*.js');
 
 });
 
@@ -29,13 +31,21 @@ gulp.task('sass', function() {
         .pipe(autoprefixer({
             browsers: ['last 2 versions']
         }))
-        .pipe(sourcemaps.write)
+        .pipe(sourcemaps.write())
         .pipe(gulp.dest('app/css'))
         .pipe(browserSync.stream());
 });
+
+gulp.task('build', ['css', 'js']);
 
 gulp.task('css', function() {
     return gulp.src('app/css/**/*.css')
         .pipe(cleanCSS())
         .pipe(gulp.dest('dist/css'));
+});
+
+gulp.task('js', function() {
+    return gulp.src('app/js/**/*.js')
+        .pipe(uglify())
+        .pipe(gulp.dest('dist/js'));
 });
