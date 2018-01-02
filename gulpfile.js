@@ -1,6 +1,8 @@
 var gulp = require('gulp'),
     browserSync = require('browser-sync');
 
+gulp.task('default', ['serve']);
+
 gulp.task('serve', function() {
 
     browserSync({
@@ -15,7 +17,7 @@ gulp.task('serve', function() {
         ],
         ['reload']
     );
-    
+
 });
 
 gulp.task('reload', function() {
