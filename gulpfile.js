@@ -1,8 +1,9 @@
-import { sync } from '../../../../Users/adam/Library/Caches/typescript/2.6/node_modules/@types/glob';
-
 var gulp = require('gulp'),
     browserSync = require('browser-sync'),
-    sass = require('gulp-sass');
+    sass = require('gulp-sass'),
+    sourcemaps = require('gulp-sourcemaps'),
+    autoprefixer = require('gulp-autoprefixer'),
+    cleanCSS = require('gulp-clean-css');
 
 gulp.task('default', ['serve']);
 
@@ -23,7 +24,18 @@ gulp.task('reload', function() {
 
 gulp.task('sass', function() {
     return gulp.src('app/scss/**/*.scss')
+        .pipe(sourcemaps.init())
         .pipe(sass().on('error', sass.logError))
+        .pipe(autoprefixer({
+            browsers: ['last 2 versions']
+        }))
+        .pipe(sourcemaps.write)
         .pipe(gulp.dest('app/css'))
         .pipe(browserSync.stream());
+});
+
+gulp.task('css', function() {
+    return gulp.src('app/css/**/*.css')
+        .pipe(cleanCSS())
+        .pipe(gulp.dest('dist/css'));
 });
