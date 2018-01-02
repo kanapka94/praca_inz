@@ -23,6 +23,8 @@
         "gulp": "3.9.1"
     },
     "devDependencies": {
-        "browser-sync": "2.22.0"
+        "browser-sync": "2.22.0",
+        "gulp-sass": "3.1.0",
+        "gulp-sourcemaps": "2.6.3"
     }
 }
