@@ -4,7 +4,8 @@ var gulp = require('gulp'),
     sourcemaps = require('gulp-sourcemaps'),
     autoprefixer = require('gulp-autoprefixer'),
     cleanCSS = require('gulp-clean-css'),
-    uglify = require('gulp-uglify');
+    uglify = require('gulp-uglify'),
+    concat = require('gulp-concat');
 
 gulp.task('default', ['serve']);
 
@@ -40,12 +41,14 @@ gulp.task('build', ['css', 'js']);
 
 gulp.task('css', function() {
     return gulp.src('app/css/**/*.css')
+        .pipe(concat('style.css'))
         .pipe(cleanCSS())
         .pipe(gulp.dest('dist/css'));
 });
 
 gulp.task('js', function() {
     return gulp.src('app/js/**/*.js')
+        .pipe(concat('main.js'))
         .pipe(uglify())
         .pipe(gulp.dest('dist/js'));
 });
