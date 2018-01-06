@@ -1,3 +1,5 @@
 import browserDetector from './lib/browserDetect';
 
-browserDetector.detect();
+document.addEventListener("DOMContentLoaded", function() {
+    browserDetector.detect();
+});
