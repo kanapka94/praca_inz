@@ -1,0 +1,27 @@
+.encrypt-form {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+
+    &__file {
+        transition: linear .3s;
+        width: 100%;
+        margin: 20px 0;
+        display: flex;
+        align-items: center;
+        padding: 3vw;
+        cursor: pointer;
+        box-sizing: border-box;
+        outline: 2px dashed #808080;
+
+        &:hover {
+            outline: 2px dashed #ABABBC;
+        }
+        &.is-dragover {
+            outline: 2px dashed #FF8B7E;
+        }
+        &.file-added {
+            outline: 2px dashed #6fd0ff;
+        }
+    }
+}

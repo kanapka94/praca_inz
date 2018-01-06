@@ -1,0 +1,38 @@
+.btn-wrapper {
+    margin: 15px auto 0 auto;
+
+    &--upload {
+        display: block;
+    }
+}
+
+.btn {
+    padding: 20px;
+    border-radius: 5px;
+    outline: none;
+    color: #3a3a3a;
+    border: none;
+    box-shadow: 0 0 6px #c1c1c1;
+
+    &:active {
+        margin: 1px;
+        box-shadow: none;
+    }
+
+    &--upload-file {
+        background: #6fd0ff;
+    }
+
+    &--login {
+        background-color: #10BF8F;
+        padding: 10px 30px;
+        display: inline-block;
+        margin: 40px 0;
+        color: #efefef;
+        text-decoration: none;
+    }
+
+    &--upload-another-file {
+        background-color: #545657;
+    }
+}
