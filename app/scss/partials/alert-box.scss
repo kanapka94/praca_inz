@@ -1,21 +1,21 @@
 .alert-box {
-    transition: .5s;
     position: fixed;
     z-index: 100;
     display: block;
+    width: 80vw;
+    left: 50%;
+    box-sizing: border-box;
+    transition: .5s;
+    transform: translateY(-150px);
     text-align: center;
+    border: 1px solid #efefef;
     border-radius: 2px;
     margin: 0 auto;
-    border: 1px solid #efefef;
-    transform: translateY(-150px);
+    margin-left: -40vw;
     padding: 20px;
-    box-sizing: border-box;
-    width: 80%;
-    left: 50%;
-    margin-left: -40%;
 
     &.show {
-        transform: translateY(-5px);
+        transform: translateY(3vh);
     }
     &.success {
         background: #ACFA4B;
