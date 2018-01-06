@@ -22,7 +22,7 @@ gulp.task('serve', ['sass','es6','moveExtraJS'], function() {
 
     gulp.watch('app/*.html', ['reload']);
     gulp.watch('app/scss/**/*.scss', ['sass']);
-    gulp.watch('app/scripts/main.js', function() {
+    gulp.watch(['app/scripts/main.js', 'app/scripts/lib/**/*'], function() {
         sequence('es6', ['reload']);
     });
 
@@ -45,7 +45,7 @@ gulp.task('sass', function() {
 });
 
 gulp.task('es6', function() {
-	browserify('app/scripts/main.js')
+	browserify('app/scripts/main.js', { debug: true })
 		.transform('babelify', {
 			presets: ['env']
 		})
