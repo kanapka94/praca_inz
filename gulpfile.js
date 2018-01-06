@@ -1,17 +1,18 @@
 var gulp = require('gulp'),
-    browserSync = require('browser-sync'),
-    sass = require('gulp-sass'),
-    sourcemaps = require('gulp-sourcemaps'),
     autoprefixer = require('gulp-autoprefixer'),
-    cleanCSS = require('gulp-clean-css'),
-    uglify = require('gulp-uglify'),
-    concat = require('gulp-concat'),
-    sequence = require('run-sequence'),
     babelify = require('babelify'),
     browserify = require('browserify'),
-    source = require('vinyl-source-stream'),
+    browserSync = require('browser-sync'),
     buffer = require('vinyl-buffer'),
-    del = require('del');
+    cleanCSS = require('gulp-clean-css'),
+    concat = require('gulp-concat'),
+    del = require('del'),
+    sass = require('gulp-sass'),
+    sequence = require('run-sequence'),
+    source = require('vinyl-source-stream'),
+    sourcemaps = require('gulp-sourcemaps'),
+    streamify = require('gulp-streamify'),
+    uglify = require('gulp-uglify');
 
 gulp.task('default', ['serve']);
 
@@ -88,8 +89,7 @@ gulp.task('js', function() {
 			presets: ['env']
 		})
         .bundle()
-        .pipe(uglify())
-		.pipe(source('main.js'))
-		.pipe(buffer())
+        .pipe(source('main.js'))
+        .pipe(streamify(uglify()))
 		.pipe(gulp.dest('dist/js'));
 });
