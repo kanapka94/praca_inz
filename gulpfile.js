@@ -10,7 +10,8 @@ var gulp = require('gulp'),
     babelify = require('babelify'),
     browserify = require('browserify'),
     source = require('vinyl-source-stream'),
-    buffer = require('vinyl-buffer');
+    buffer = require('vinyl-buffer'),
+    del = require('del');
 
 gulp.task('default', ['serve']);
 
@@ -61,7 +62,18 @@ gulp.task('moveExtraJS', function() {
         .pipe(gulp.dest('dist/js/extra'));
 });
 
-gulp.task('build', ['css', 'js','moveExtraJS']);
+gulp.task('clean', function() {
+    return del(['dist']);
+});
+
+gulp.task('build', function() {
+    sequence('clean', ['html', 'css', 'js','moveExtraJS']);
+});
+
+gulp.task('html', function() {
+    return gulp.src('app/*.html')
+        .pipe(gulp.dest('dist'));
+});
 
 gulp.task('css', function() {
     return gulp.src('app/css/**/*.css')

@@ -40,8 +40,9 @@ const CRYPTO_ENGINE = {
                 let encryptedKey = CRYPTO_ENGINE.encryptRSA(jsonString);
                 APP.uploadFile(fileName, fileType, data, encryptedKey, encryptedIV);
             })
-                .catch(function (err) {
-                    console.error(err);
+                .catch(function (error) {
+                    popup.showAlert('error', 'Błąd: ', error);
+                    console.error(error);
                 });
         },
     },
@@ -58,15 +59,16 @@ const CRYPTO_ENGINE = {
     encryptRSA: function (data) {
         return CRYPTO_ENGINE.passCrypto.encrypt(data);
     },
-    encryptAES: function (data, fileName, fileType) {
-        CRYPTO_ENGINE.generatedIV = window.crypto.getRandomValues(new Uint8Array(12));
+    encryptAES: function (fileBytesArray, fileName, fileType) {
+        let arraysCount = 12;
+        CRYPTO_ENGINE.generatedIV = window.crypto.getRandomValues(new Uint8Array(arraysCount));
         window.crypto.subtle.encrypt(
             {
                 name: "AES-GCM",
                 iv: CRYPTO_ENGINE.generatedIV,
             },
             CRYPTO_ENGINE.aesKey,
-            data
+            fileBytesArray
         ).then(function (encrypted) {
             let bytesConvertedToBase64String = base64js.fromByteArray(new Uint8Array(encrypted));
             let encryptedIV = CRYPTO_ENGINE.encryptRSA(base64js.fromByteArray(CRYPTO_ENGINE.generatedIV));
@@ -102,24 +104,22 @@ const APP = {
         },
         bindUIActions: function () {
             $('.btn--upload-file').click(function () {
-                console.log('klik!');
-                var file = APP.getUploadedFile();
+                var file = APP.getFormFile();
                 if (!file) {
                     popup.showAlert('error', 'Błąd:', 'Plik nie został wczytany!');
                     return;
                 }
                 APP.encryptAndUpload(file);
             });
-        },
-        bindLoadFileEvent: function () {
+
             $('.encrypt-form__file').change(function () {
                 if ($(this).val() !== '') {
                     CRYPTO_ENGINE.config.generateAESKey();
                     $(this).addClass('file-added');
-                    $('.file-btn-wrapper').css('display', 'flex');
+                    $('.btn-wrapper').css('display', 'flex');
                 } else {
                     $(this).removeClass('file-added');
-                    $('.file-btn-wrapper').css('display', 'none');
+                    $('.btn-wrapper').css('display', 'none');
                 }
             });
         },
@@ -130,23 +130,23 @@ const APP = {
             });
         }
     },
-    getUploadedFile: function () {
-        var uploadedFile = document.querySelector('.encrypt-form__file').files[0];
-        return uploadedFile;
+    getFormFile: function () {
+        let file = document.querySelector('.encrypt-form__file').files[0];
+        return file;
     },
     encryptAndUpload: function (file) {
 
         const reader = new FileReader();
         reader.onload = function () {
-            var bytesArray = new Uint8Array(reader.result);
-            CRYPTO_ENGINE.encryptAES(bytesArray, file.name, file.type);
+            let fileBytesArray = new Uint8Array(reader.result);
+            CRYPTO_ENGINE.encryptAES(fileBytesArray, file.name, file.type);
         };
         reader.onerror = function (error) {
-            console.log('Error: ', error);
+            console.log('Błąd: ', error);
         };
         reader.onprogress = function (data) {
             if (data.lengthComputable) {
-                var progress = parseInt(((data.loaded / data.total) * 100), 10);
+                let progress = parseInt(((data.loaded / data.total) * 100), 10);
             }
         };
         reader.readAsArrayBuffer(file);
@@ -196,7 +196,6 @@ const APP = {
         CRYPTO_ENGINE.init();
         APP.config.appendForm();
         APP.config.bindUIActions();
-        APP.config.bindLoadFileEvent();
     }
 };
 
