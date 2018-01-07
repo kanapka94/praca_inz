@@ -31,11 +31,12 @@
         padding: 10px 30px;
         display: inline-block;
         margin: 40px 0;
-        color: #efefef;
+        color: $color-secondary;
         text-decoration: none;
     }
 
     &--upload-another-file {
         background-color: #545657;
+        color: $color-secondary;
     }
 }

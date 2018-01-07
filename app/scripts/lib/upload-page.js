@@ -12,7 +12,9 @@ const CRYPTO_ENGINE = {
     generatedIV: null,
     config: {
         loadPublicKey: function () {
-            $.get('rsa_2048_pub.key', function (data) {
+            
+            $.get('extra/rsa_2048_pub.key', function (data) {
+                console.log('pobrano plik rsa', data);
                 CRYPTO_ENGINE.passCrypto.setPublicKey(data);
             });
         },
@@ -122,12 +124,6 @@ const APP = {
                     $('.btn-wrapper').css('display', 'none');
                 }
             });
-        },
-        bindHideCredentialPasswordEvent: function (password, dottedPassword) {
-            const passField = $('.data-wrapper__password-wrapper__password');
-            $('#data-wrapper__password-wrapper__show-password').click(function () {
-                (passField.text() === password) ? passField.text(dottedPassword) : passField.text(password);
-            });
         }
     },
     getFormFile: function () {
@@ -152,6 +148,11 @@ const APP = {
         reader.readAsArrayBuffer(file);
     },
     uploadFile: function (fileName, fileType, fileInBase64String, encryptedKey, encryptedIV) {
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
         $.ajax({
             // xhrFields: {
             //     onprogress: function (e) {
@@ -161,7 +162,7 @@ const APP = {
             //     }
             // },
             type: 'POST',
-            url: "saveFile.php",
+            url: "saveFile",
             xhr: function () {
                 var xhr = $.ajaxSettings.xhr();
                 xhr.upload.onprogress = function (e) {
@@ -180,11 +181,14 @@ const APP = {
             dataType: 'json',
             success: function (response) {
                 popup.showAlert(response.type, response.title, response.text);
-                if (response.type === 'success credentials') {
-                    $('.file-uploader').css('display', 'none');
-                    setTimeout(function () {
-                        $('.mainNav__login').addClass('decorated');
-                    }, 3000);
+                if (response.type === 'success') {
+                    $('.btn--upload-file').css('display', 'none');
+                    let refreshBtn = $('<button type="button" class="btn btn--upload-another-file">Odśwież stronę</button>').click(function() {
+                        location.reload();                     
+                    });
+                    $('.btn-wrapper--upload').append(refreshBtn);
+                } else {
+                    console.log(response);
                 }
             },
             error: function (xhr, ajaxOptions, thrownError) {
