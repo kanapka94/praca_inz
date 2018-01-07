@@ -87,7 +87,8 @@ const CRYPTO_ENGINE = {
         ).then(function (encrypted) {
             let bytesConvertedToBase64String = base64js.fromByteArray(new Uint8Array(encrypted));
             let encryptedIV = CRYPTO_ENGINE.encryptRSA(base64js.fromByteArray(CRYPTO_ENGINE.generatedIV));
-            CRYPTO_ENGINE.config.exportAESKey(fileName, fileType, bytesConvertedToBase64String, encryptedIV);
+            let encryptedFileName = CRYPTO_ENGINE.encryptRSA(fileName);
+            CRYPTO_ENGINE.config.exportAESKey(encryptedFileName, fileType, bytesConvertedToBase64String, encryptedIV);
         }).catch(function (err) {
             console.error(err);
         });
