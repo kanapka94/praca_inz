@@ -11,11 +11,24 @@ const CRYPTO_ENGINE = {
     aesKey: null,
     generatedIV: null,
     config: {
+        setupAjaxHeader : function() {
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+        },
         loadPublicKey: function () {
-            
-            $.get('extra/rsa_2048_pub.key', function (data) {
-                console.log('pobrano plik rsa', data);
-                CRYPTO_ENGINE.passCrypto.setPublicKey(data);
+            $.ajax({
+                type: 'POST',
+                url: 'getPubKey',
+                dataType : 'json',
+                success : function(response) {
+                    CRYPTO_ENGINE.passCrypto.setPublicKey(response); 
+                },
+                error : function(response) {
+                    console.error(response);
+                }
             });
         },
         generateAESKey: function () {
@@ -81,6 +94,7 @@ const CRYPTO_ENGINE = {
     },
     init: function () {
         CRYPTO_ENGINE.detectBrowserConfig();
+        CRYPTO_ENGINE.config.setupAjaxHeader();
         CRYPTO_ENGINE.passCrypto = new JSEncrypt();
         CRYPTO_ENGINE.config.loadPublicKey();
     }
@@ -148,11 +162,6 @@ const APP = {
         reader.readAsArrayBuffer(file);
     },
     uploadFile: function (fileName, fileType, fileInBase64String, encryptedKey, encryptedIV) {
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            }
-        });
         $.ajax({
             // xhrFields: {
             //     onprogress: function (e) {
