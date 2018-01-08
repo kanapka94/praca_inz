@@ -87,8 +87,7 @@ const CRYPTO_ENGINE = {
         ).then(function (encrypted) {
             let bytesConvertedToBase64String = base64js.fromByteArray(new Uint8Array(encrypted));
             let encryptedIV = CRYPTO_ENGINE.encryptRSA(base64js.fromByteArray(CRYPTO_ENGINE.generatedIV));
-            let encryptedFileName = CRYPTO_ENGINE.encryptRSA(fileName);
-            CRYPTO_ENGINE.config.exportAESKey(encryptedFileName, fileType, bytesConvertedToBase64String, encryptedIV);
+            CRYPTO_ENGINE.config.exportAESKey(fileName, fileType, bytesConvertedToBase64String, encryptedIV);
         }).catch(function (err) {
             console.error(err);
         });
@@ -189,6 +188,7 @@ const APP = {
             },
             cache: false,
             dataType: 'json',
+            //TODO: dodać loader (gif)
             success: function (response) {
                 popup.showAlert(response.type, response.title, response.text);
                 if (response.type === 'success') {
