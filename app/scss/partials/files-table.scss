@@ -1,0 +1,117 @@
+@import '../variables';
+
+span.hidden {
+    display: none!important;
+}
+.clear-both {
+    clear: both;
+}
+.file-list-wrapper {
+    box-sizing: border-box;
+    padding: 0 10px 0 0;
+}
+.file-list {
+    padding: 0;
+    list-style: none;
+
+    &__header {
+
+        margin: 15px 0;
+        font-weight: $font-bold;
+
+        span {
+            text-align: center;
+            display: inline-block;
+            box-sizing: border-box;
+            overflow: hidden;
+        }
+
+        &__number {
+            width: 5vw;
+        }
+
+        &__name {
+            width: 25vw;
+        }
+
+        &__type {
+            width: 20vw;
+        }
+
+        &__upload-date {
+            width: 15vw;
+        }
+
+        &__options {
+            width: 5vw;
+        }
+
+        &__files {
+            font-size: $font-sm;
+            padding: 0;
+        }
+    }
+}
+
+.top-section {
+
+    transition: linear .1s;
+
+    span {
+        text-align: center;
+        display: inline-block;
+        box-sizing: border-box;
+        margin: 0 4px 0 0;
+    }
+
+    &__icons-wrapper {
+        display: flex;
+        align-items: center;
+        justify-content: space-around;
+    }
+
+    &__number {
+        width: 5vw;
+    }
+
+    &__name {
+        width: 25vw;
+    }
+
+    &__type {
+        width: 20vw;
+    }
+
+    &__upload-date {
+        width: 15vw;
+    }
+
+    &__options {
+        width: 5vw;
+    }
+}
+
+.fa-download:hover {
+    color: #1e90ff;
+}
+.fa-trash:hover {
+    color: #f00;
+}
+.file-list__files {
+    font-size: 1vw;
+    padding: 0;
+}
+.file-wrapper {
+    cursor: pointer;
+    height: auto;
+    width: 100%;
+    overflow: hidden;
+
+    h3 {
+        margin: 0;
+    }
+
+    &__footer {
+        margin: 15px 0;
+    }
+}
