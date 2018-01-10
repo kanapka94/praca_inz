@@ -1,0 +1,93 @@
+@import '../variables';
+
+.horizontal-line {
+    margin: 45px;
+}
+.decrypt-files label {
+    font-size: $font-lg;
+}
+.decrypt-files__private-key, .decrypt-files__main-file, .additional-files-wrapper input {
+    padding: 20px;
+    display: block;
+    width: 40%;
+    margin: 0 auto;
+    border: 1px dashed #808080;
+    outline: none;
+}
+.decrypt-files__private-key {
+    padding: 30px;
+    width: 50%;
+}
+.decrypt-files__main-file {
+    margin: 0 auto 25px auto;
+}
+
+.label--blue {
+    color: #2196F3;
+}
+.decrypt-files__hint {
+    text-align: center;
+    margin: -9px 0 -3px 0;
+    padding: 0;
+    display: none;
+}
+.decrypt-files__hint.active {
+    display: block;
+}
+.decrypt-files__main-file-original-name {
+    padding: 10px;
+    border: none;
+    text-align: center;
+    border-bottom: 1px dashed #808080;
+    outline: none;
+    display: block;
+    width: 22%;
+    color: #808080;
+    margin: 0 auto;
+}
+label {
+    display: block;
+    text-align: center;
+    margin: 10px 0;
+}
+.labels {
+    text-align: center;
+}
+.labels label {
+    width: 35%;
+    display: inline-block;
+}
+.additional-files-wrapper {
+    width: 100%;
+    text-align: center;
+}
+.additional-files-wrapper input {
+    display: inline-block;
+    width: 30%;
+    margin: 0 auto;
+}
+.decrypt-btn {
+    padding: 20px;
+    display: block;
+    margin: 8vh auto;
+    background-color: #10bf8f;
+    border-radius: 10px;
+    outline: none;
+    cursor: pointer;
+    border: none;
+    color: #fff;
+    box-shadow: 0 0 5px #ABABBC;
+}
+.decrypt-btn:active {
+    margin: 8.1vh auto 7.9vh auto;
+    box-shadow: none;
+}
+.decrypt-btn.blocked {
+    background-color: #ff4a67;
+    box-shadow: none;
+    cursor: default;
+    opacity: .2;
+}
+.decrypt-btn.blocked:active {
+    margin: 8vh auto;
+}
