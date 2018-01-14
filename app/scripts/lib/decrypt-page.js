@@ -1,25 +1,41 @@
 import popup from './alert-box';
 
-var CRYPTO_ENGINE = {
+const SETTINGS = {
+    text : {
+        html : {
+            fileNameNotChanged : 'Nie zmieniona',
+            fileNameNotAvailable : 'nie dostępna'
+        },
+        popup : {
+            loadPrivateKey : 'Wczytano klucz prywatny!',
+            errorLoadPrivateKey : 'Nie można wczytać klucza prywatnego!',
+            wrongFileKey : 'Zły plik "file_key" !',
+            wrongIVFile : 'Zły plik "file_iv" !',
+            fileEncrypted : 'Odszyfrowano plik!',
+        }
+    }
+};
+
+const CRYPTO_ENGINE = {
     passCrypto: null,
     privateKeyLoaded: false,
     aesKey: null,
     generatedIV: null,
     config: {
         setPrivateKey: function () {
-            var file = document.querySelector('.decrypt-files__private-key').files[0];
+            let file = document.querySelector('.decrypt-files__private-key').files[0];
             if (file) {
-                var reader = new FileReader();
+                let reader = new FileReader();
                 reader.readAsText(file, 'UTF-8');
                 reader.onload = function (evt) {
                     CRYPTO_ENGINE.passCrypto.setPrivateKey(evt.target.result);
                     CRYPTO_ENGINE.privateKeyLoaded = true;
                     APP.loadedFiles++;
                     APP.checkLoadedFilesCount();
-                    popup.showAlert('success', 'Sukces:', 'Wczytano klucz prywatny!');
+                    popup.showAlert('success', 'Sukces:', SETTINGS.text.popup.loadPrivateKey);
                 }
                 reader.onerror = function (evt) {
-                    popup.showAlert('error', 'Błąd: ', 'Nie można wczytać klucza prywatnego!');
+                    popup.showAlert('error', 'Błąd: ', SETTINGS.text.popup.errorLoadPrivateKey);
                 }
             }
         },
@@ -38,13 +54,12 @@ var CRYPTO_ENGINE = {
                 false,
                 ["encrypt", "decrypt"]
             ).then(function(key){
-                console.log('Klucz zaimportowany');
                 CRYPTO_ENGINE.aesKey = key;
-                var encryptedBytes = base64js.toByteArray(encryptedFileInBase64);
-                var fileData = new Uint8Array(encryptedBytes);
+                let encryptedBytes = base64js.toByteArray(encryptedFileInBase64);
+                let fileData = new Uint8Array(encryptedBytes);
                 APP.loadIVFile(fileData, fileName, fileType);
             }).catch(function(err){
-                popup.showAlert('error', 'Błąd:', 'Zły plik "file_key" !');
+                popup.showAlert('error', 'Błąd:', SETTINGS.text.popup.wrongFileKey);
             });
         },
     },
@@ -65,14 +80,14 @@ var CRYPTO_ENGINE = {
             data
         ).then(function(decrypted){
             APP.saveFile(new Uint8Array(decrypted), fileName, fileType);
-            popup.showAlert('success', 'Sukces:', 'Odszyfrowano plik!');
+            popup.showAlert('success', 'Sukces:', SETTINGS.text.popup.fileEncrypted);
         }).catch(function(err){
-            popup.showAlert('error', 'Błąd:', 'Zły plik "file_key" !');
+            popup.showAlert('error', 'Błąd:', SETTINGS.text.popup.wrongFileKey);
         });
     }
 };
 
-var APP = {
+const APP = {
     loadedFiles: 0,
     config: {
         setupAjaxHeader : function() {
@@ -83,12 +98,12 @@ var APP = {
             });
         },
         bindDecryptFileEvent: function () {
-            var $field = $('.decrypt-btn');
+            const $field = $('.decrypt-btn');
             $field.click(function() {
                 if($field.hasClass('blocked')) {
                     return;
                 }
-                var file = APP.getDownloadedFile();
+                let file = APP.getDownloadedFile();
                 APP.decryptAndDownload(file);
             });
         },
@@ -113,10 +128,10 @@ var APP = {
         bindDecryptFileNameEvent: function() {
             $('.decrypt-files__main-file').change(function () {
                 if ($(this).val() !== '') {
-                    var uploadedFile = document.querySelector('.decrypt-files__main-file').files[0];
-                    var fileName = uploadedFile.name;
-                    var tmpFileName = fileName.substr(0,fileName.length-8);
-                    var finalFileName = tmpFileName.substr(0, tmpFileName.length);
+                    let uploadedFile = document.querySelector('.decrypt-files__main-file').files[0];
+                    let fileName = uploadedFile.name;
+                    let tmpFileName = fileName.substr(0,fileName.length-8);
+                    let finalFileName = tmpFileName.substr(0, tmpFileName.length);
                     $.ajax({
                         url: 'decryptFileName',
                         type: 'POST',
@@ -132,7 +147,7 @@ var APP = {
                             $('.decrypt-files__main-file-original-name').html(response.originalFileName);
                             $('.decrypt-files__hint').addClass('active');
                         } else {
-                            $('.decrypt-files__main-file-original-name').html('Nie zmieniona');
+                            $('.decrypt-files__main-file-original-name').html(SETTINGS.text.html.fileNameNotChanged);
                         }
                     })
                     .fail(function(response) {
@@ -145,7 +160,7 @@ var APP = {
                 } else {
                     $('.decrypt-files__label').removeClass('label--blue');
                     $('.decrypt-files__hint').removeClass('active');
-                    $('.decrypt-files__main-file-original-name').html('nie dostępna');
+                    $('.decrypt-files__main-file-original-name').html(SETTINGS.text.html.fileNameNotAvailable);
                 }
             });
         }
@@ -159,42 +174,42 @@ var APP = {
         return document.querySelector('.decrypt-files__main-file').files[0];
     },
     loadIVFile: function (fileData, fileName, fileType) {
-        var encryptedFile = document.querySelector('.additional-files-wrapper__file-iv').files[0];
-        var reader = new FileReader();
+        let encryptedFile = document.querySelector('.additional-files-wrapper__file-iv').files[0];
+        let reader = new FileReader();
         reader.readAsText(encryptedFile, 'utf-8');
         reader.onload = function() {
-            var encryptedFile = reader.result;
-            var base64String = CRYPTO_ENGINE.decryptRSA(encryptedFile);
-            var ivKey = base64js.toByteArray(base64String);
+            let encryptedFile = reader.result;
+            let base64String = CRYPTO_ENGINE.decryptRSA(encryptedFile);
+            let ivKey = base64js.toByteArray(base64String);
             CRYPTO_ENGINE.generatedIV = ivKey;
             CRYPTO_ENGINE.decryptAES(fileData, fileName, fileType);
         };
         reader.onerror = function (error) {
-            popup.showAlert('error', 'Błąd:', 'Zły plik "file_iv" !');
+            popup.showAlert('error', 'Błąd:', SETTINGS.text.popup.wrongIVFile);
         };
         reader.onprogress = function(data) {
             if (data.lengthComputable) {
-                var progress = parseInt( ((data.loaded / data.total) * 100), 10 );
+                let progress = parseInt( ((data.loaded / data.total) * 100), 10 );
                 console.log(progress);
             }
         };
     },
     loadKeyFile: function (fileData, fileName, fileType) {
-        var encryptedFile = document.querySelector('.additional-files-wrapper__file-key').files[0];
-        var reader = new FileReader();
+        let encryptedFile = document.querySelector('.additional-files-wrapper__file-key').files[0];
+        let reader = new FileReader();
         reader.readAsText(encryptedFile, 'utf-8');
         reader.onload = function() {
-            var jsonEncrypted = reader.result;
-            var decryptedFile = CRYPTO_ENGINE.decryptRSA(jsonEncrypted);
-            var fileKey = JSON.parse(decryptedFile);
+            let jsonEncrypted = reader.result;
+            let decryptedFile = CRYPTO_ENGINE.decryptRSA(jsonEncrypted);
+            let fileKey = JSON.parse(decryptedFile);
             CRYPTO_ENGINE.config.importAESKey(fileKey, fileData, fileName, fileType);
         };
         reader.onerror = function (error) {
-            popup.showAlert('error', 'Błąd:', 'Zły plik "file_key" !');
+            popup.showAlert('error', 'Błąd:', SETTINGS.text.popup.wrongFileKey);
         };
         reader.onprogress = function(data) {
             if (data.lengthComputable) {
-                var progress = parseInt( ((data.loaded / data.total) * 100), 10 );
+                let progress = parseInt( ((data.loaded / data.total) * 100), 10 );
                 console.log(progress);
             }
         };
@@ -203,17 +218,17 @@ var APP = {
         return Blob;
     },
     saveFile: function(byteData, fileName, fileType) {
-        var BB = APP.getBlob();
+        let BB = APP.getBlob();
         saveAs(
             new BB([byteData], { type : fileType }),
             fileName
         );
     },
     decryptAndDownload: function(base64File) {
-        var reader = new FileReader();
+        let reader = new FileReader();
         reader.onload = function() {
-            var fileType = $('.decrypt-files__main-file-type').val();
-            var base64String = reader.result;
+            let fileType = $('.decrypt-files__main-file-type').val();
+            let base64String = reader.result;
             let fileName = $('.decrypt-files__main-file-original-name').text();
             APP.loadKeyFile(base64String, fileName, fileType);
         };
@@ -222,7 +237,7 @@ var APP = {
         };
         reader.onprogress = function(data) {
             if (data.lengthComputable) {
-                var progress = parseInt( ((data.loaded / data.total) * 100), 10 );
+                let progress = parseInt( ((data.loaded / data.total) * 100), 10 );
                 console.log(progress);
             }
         };

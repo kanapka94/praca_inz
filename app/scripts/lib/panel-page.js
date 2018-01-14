@@ -1,5 +1,13 @@
 import popup from './alert-box';
 
+const SETTINGS = {
+    text : {
+        html : {
+            deleteFile : '\n\nCzy na pewno chcesz usunąć plik?'
+        }
+    }
+};
+
 const APP = {
     setupAjaxHeader : function() {
         $.ajaxSetup({
@@ -30,7 +38,7 @@ const APP = {
         });
     },
     showDeleteFilePrompt: function (fileName, fileId, parentNode) {
-        let answer = confirm('Usuwanie: '+ fileName +'\n\nCzy na pewno chcesz usunąć plik?');
+        let answer = confirm('Usuwanie: '+ fileName + SETTINGS.text.html.deleteFile);
         if(answer) {
             APP.deleteFile(fileId, parentNode);
         }

@@ -3,7 +3,16 @@ import popup from './alert-box';
 "use strict";
 
 const SETTINGS = {
-    uploadButtonText : 'Zaszyfruj i wyślij plik'
+    text : {
+        html : {
+            uploadButtonText : 'Zaszyfruj i wyślij plik',
+        },
+        popup : {
+            secureKeyGenerated : 'Bezpieczny klucz wygenerowany!',
+            fileNotLoaded : 'Plik nie został wczytany!',
+            cryptoApiLoadError : 'Twoja przeglądarka nie obsługuje interfejsu Web Cryptography API! Ta strona nie będzie działać poprawnie.'
+        }
+    }
 }
 
 const CRYPTO_ENGINE = {
@@ -41,7 +50,7 @@ const CRYPTO_ENGINE = {
                 ["encrypt", "decrypt"]
             ).then(function (key) {
                 CRYPTO_ENGINE.aesKey = key;
-                popup.showAlert('success', '', 'Bezpieczny klucz wygenerowany!');
+                popup.showAlert('success', '', SETTINGS.text.popup.secureKeyGenerated);
             }).catch(function (err) {
                 console.error(err);
             });
@@ -66,8 +75,8 @@ const CRYPTO_ENGINE = {
             window.crypto.subtle = window.crypto.webkitSubtle;
         }
         if (!window.crypto || !window.crypto.subtle) {
-            popup.showAlert('error','Błąd: ',"Twoja przeglądarka nie obsługuje interfejsu Web Cryptography API! Ta strona nie będzie działać poprawnie.");
-            throw new Error("Twoja przeglądarka nie obsługuje interfejsu Web Cryptography API! Ta strona nie będzie działać poprawnie.");
+            popup.showAlert('error','Błąd: ', SETTINGS.text.popup.cryptoApiLoadError);
+            throw new Error(SETTINGS.text.popup.cryptoApiLoadError);
             return;
         }
     },
@@ -106,7 +115,7 @@ const APP = {
             const input = '<input type="file" class="encrypt-form__file">';
             const uploadButton = 
                 `<div class="btn-wrapper btn-wrapper--upload">
-                    <button type="button" class="btn btn--upload-file">${SETTINGS.uploadButtonText}</button>
+                    <button type="button" class="btn btn--upload-file">${SETTINGS.text.html.uploadButtonText}</button>
                 </div>`;
             const elements = [input, uploadButton];
             return elements;
@@ -122,7 +131,7 @@ const APP = {
             $('.btn--upload-file').click(function () {
                 var file = APP.getFormFile();
                 if (!file) {
-                    popup.showAlert('error', 'Błąd:', 'Plik nie został wczytany!');
+                    popup.showAlert('error', 'Błąd:', SETTINGS.text.popup.fileNotLoaded);
                     return;
                 }
                 APP.encryptAndUpload(file);
@@ -175,7 +184,7 @@ const APP = {
             xhr: function () {
                 var xhr = $.ajaxSettings.xhr();
                 xhr.upload.onprogress = function (e) {
-                    // console.log(Math.floor(e.loaded / e.total * 100) + '%');
+                    console.log(Math.floor(e.loaded / e.total * 100) + '%');
                 };
                 return xhr;
             },
@@ -190,6 +199,7 @@ const APP = {
             dataType: 'json',
             //TODO: dodać loader (gif)
             success: function (response) {
+                // usuń loader
                 popup.showAlert(response.type, response.title, response.text);
                 if (response.type === 'success') {
                     $('.btn--upload-file').css('display', 'none');

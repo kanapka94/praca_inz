@@ -1,10 +1,15 @@
-var detector = {
-    config : {
-        wrapperSelector : '.main-wrapper',
-        htmlErrorMsg : '<div><h2 class="detect-browser-text">System szyfrujący obecnie działa <span class="important">tylko</span> na przeglądarkach:<br>Google Chrome oraz Mozilla Firefox</h2></div>'
-    },
+const SETTINGS = {
+    wrapperSelector : '.main-wrapper',
+    text : {
+        html : {
+            detectErrorMsg : '<div><h2 class="detect-browser-text">System szyfrujący obecnie działa <span class="important">tylko</span> na przeglądarkach:<br>Google Chrome oraz Mozilla Firefox</h2></div>'
+        }
+    }
+};
+
+const detector = {
     detect : function() {
-        var isChromium = window.chrome,
+        let isChromium = window.chrome,
             winNav = window.navigator,
             vendorName = winNav.vendor,
             isOpera = winNav.userAgent.indexOf('OPR') > -1,
@@ -24,7 +29,7 @@ var detector = {
         }        
     },
     displayErrorMsg : function() {
-        $(detector.config.wrapperSelector).html(detector.config.htmlErrorMsg);
+        $(SETTINGS.wrapperSelector).html(SETTINGS.text.html.detectErrorMsg);
     },
     init : function() {
         detector.detect();
