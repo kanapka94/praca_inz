@@ -132,7 +132,8 @@ const APP = {
                 if ($(this).val() !== '') {
                     let uploadedFile = document.querySelector('.decrypt-files__main-file').files[0];
                     let fileName = uploadedFile.name;
-                    let tmpFileName = fileName.substr(0,fileName.length-8);
+                    const encodedPartNameLength = 8;
+                    let tmpFileName = fileName.substr(0,fileName.length - encodedPartNameLength);
                     let finalFileName = tmpFileName.substr(0, tmpFileName.length);
                     $.ajax({
                         url: 'decryptFileName',
