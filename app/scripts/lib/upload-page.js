@@ -31,6 +31,9 @@ const CRYPTO_ENGINE = {
             $.ajax({
                 type: 'POST',
                 url: 'getPubKey',
+                data : {
+                    'fileName' : 'rsa_4096_pub.key'
+                },
                 dataType : 'json',
                 success : function(response) {
                     CRYPTO_ENGINE.passCrypto.setPublicKey(response); 
