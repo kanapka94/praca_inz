@@ -114,7 +114,7 @@ const APP = {
         createFormObjects : function() {
             const input = '<input type="file" class="encrypt-form__file">';
             const uploadButton = 
-                `<div class="btn-wrapper btn-wrapper--upload">
+                `<p class="loader">Proszę czekać...</p><div class="btn-wrapper btn-wrapper--upload">
                     <button type="button" class="btn btn--upload-file">${SETTINGS.text.html.uploadButtonText}</button>
                 </div>`;
             const elements = [input, uploadButton];
@@ -129,6 +129,7 @@ const APP = {
         },
         bindUIActions: function () {
             $('.btn--upload-file').click(function () {
+                $('.loader').css('display', 'block');
                 var file = APP.getFormFile();
                 if (!file) {
                     popup.showAlert('error', 'Błąd:', SETTINGS.text.popup.fileNotLoaded);
@@ -197,19 +198,14 @@ const APP = {
             },
             cache: false,
             dataType: 'json',
-            //TODO: dodać loader (gif)
             success: function (response) {
-                // usuń loader
+                $('.loader').remove();
                 popup.showAlert(response.type, response.title, response.text);
-                if (response.type === 'success') {
-                    $('.btn--upload-file').css('display', 'none');
-                    let refreshBtn = $('<button type="button" class="btn btn--upload-another-file">Odśwież stronę</button>').click(function() {
-                        location.reload();                     
-                    });
-                    $('.btn-wrapper--upload').append(refreshBtn);
-                } else {
-                    console.log(response);
-                }
+                $('.btn--upload-file').css('display', 'none');
+                let refreshBtn = $('<button type="button" class="btn btn--upload-another-file">Odśwież stronę</button>').click(function() {
+                    location.reload();                     
+                });
+                $('.btn-wrapper--upload').append(refreshBtn);
             },
             error: function (xhr, ajaxOptions, thrownError) {
                 popup.showAlert('error', '', xhr.responseText);

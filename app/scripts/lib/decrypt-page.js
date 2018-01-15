@@ -79,6 +79,7 @@ const CRYPTO_ENGINE = {
             CRYPTO_ENGINE.aesKey,
             data
         ).then(function(decrypted){
+            $('.loader').remove();
             APP.saveFile(new Uint8Array(decrypted), fileName, fileType);
             popup.showAlert('success', 'Sukces:', SETTINGS.text.popup.fileEncrypted);
         }).catch(function(err){
@@ -103,6 +104,7 @@ const APP = {
                 if($field.hasClass('blocked')) {
                     return;
                 }
+                $('.loader').css('display', 'block');
                 let file = APP.getDownloadedFile();
                 APP.decryptAndDownload(file);
             });
