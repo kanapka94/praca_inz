@@ -117,7 +117,7 @@ const APP = {
         createFormObjects : function() {
             const input = '<input type="file" class="encrypt-form__file">';
             const uploadButton = 
-                `<p class="loader">Proszę czekać...</p><div class="btn-wrapper btn-wrapper--upload">
+                `<p class="percent"></p><p class="loader">Proszę czekać...</p><div class="btn-wrapper btn-wrapper--upload">
                     <button type="button" class="btn btn--upload-file">${SETTINGS.text.html.uploadButtonText}</button>
                 </div>`;
             const elements = [input, uploadButton];
@@ -133,6 +133,7 @@ const APP = {
         bindUIActions: function () {
             $('.btn--upload-file').click(function () {
                 $('.loader').css('display', 'block');
+                $('.percent').css('display', 'block');
                 var file = APP.getFormFile();
                 if (!file) {
                     popup.showAlert('error', 'Błąd:', SETTINGS.text.popup.fileNotLoaded);
@@ -170,25 +171,25 @@ const APP = {
         reader.onprogress = function (data) {
             if (data.lengthComputable) {
                 let progress = parseInt(((data.loaded / data.total) * 100), 10);
+                $('.percent').text('Szyfrowanie pliku: ' + progress);
             }
         };
         reader.readAsArrayBuffer(file);
     },
     uploadFile: function (fileName, fileType, fileInBase64String, encryptedKey, encryptedIV) {
         $.ajax({
-            // xhrFields: {
-            //     onprogress: function (e) {
-            //         if (e.lengthComputable) {
-            //             console.log(e.loaded / e.total * 100 + '%');
-            //         }
-            //     }
-            // },
             type: 'POST',
             url: "saveFile",
             xhr: function () {
-                var xhr = $.ajaxSettings.xhr();
+                let xhr = $.ajaxSettings.xhr();
+                let uploadResult = 0;
                 xhr.upload.onprogress = function (e) {
-                    console.log(Math.floor(e.loaded / e.total * 100) + '%');
+                    uploadResult = Math.floor(e.loaded / e.total * 100);
+                    if (uploadResult < 100) {
+                        $('.percent').text('Wysyłanie pliku: ' + uploadResult + '%');
+                    } else {
+                        $('.percent').text('Trwa zapisywanie pliku na serwerze.');
+                    }
                 };
                 return xhr;
             },
@@ -203,6 +204,7 @@ const APP = {
             dataType: 'json',
             success: function (response) {
                 $('.loader').remove();
+                $('.percent').remove();
                 popup.showAlert(response.type, response.title, response.text);
                 $('.btn--upload-file').css('display', 'none');
                 let refreshBtn = $('<button type="button" class="btn btn--upload-another-file">Odśwież stronę</button>').click(function() {
